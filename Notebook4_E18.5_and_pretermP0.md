@@ -4,9 +4,9 @@ author: "Laura Wolbeck"
 date: "2023-02-28"
 ---
 
-In this notebook we will perform DEG and GSEA analysis for samples E 18.5 and preterm P0. Moreover, this script includes code for all figures of E 18.5 and preterm P0 samples. 
-For DEG and GSEA the package "cacoa" was used: https://github.com/kharchenkolab/cacoa/tree/main
-Conos object from notebook1 is read in as "con"
+In this notebook DEG and GSEA analysis is performed for samples E 18.5 and preterm P0. Moreover, this script includes code for all figures of E 18.5 and preterm P0 samples. 
+For DEG and GSEA the package "cacoa" was used: https://github.com/kharchenkolab/cacoa/tree/main.
+
 
 # Setup
 ```{r setup, results='hide', warning=FALSE, message = FALSE}
@@ -24,6 +24,7 @@ library(xlsx)
 
 # 1. DEG analysis
 Read in high resolution annotation file "anno"
+Read in conos object from notebook1 as "con"
 
 Create condition factor for cacoa object
 ```{r,eval=FALSE }
