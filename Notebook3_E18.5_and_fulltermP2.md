@@ -38,8 +38,8 @@ names = c("E18_5_1_",
            "full_P2_2_")
 ```
 
-# 2. Pagoda and conos
-
+# 2. UMAP embedding and clustering
+pre-processing of each dataset with pagoda2, followed by using conos to build the joint UMAP graph with forced alignment (alignment.strength = 0.2) to integrate samples well
 ```{r, eval=FALSE}
 con <- quickConos(cms,
                   names,
