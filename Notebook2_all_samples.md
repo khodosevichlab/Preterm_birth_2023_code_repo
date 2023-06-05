@@ -38,7 +38,7 @@ names = c("E18_5_1_",
 ```
 
 # 1. UMAP embedding and clustering 
-
+using conos to build the joint UMAP graph with forced alignment (alignment.strength = 0.3) to integrate samples well
 ```{r, eval=FALSE}
 con <- quickConos(cms,
                   names,
@@ -112,14 +112,18 @@ conditions %<>% as.factor()
 
 names(conditions) <- names(sample)
 ```
-
+to make sure that cells in conditions are in same order as in cm
+```{r}
+# order cells in "conditions" as in "cm"
+conditions %<>% .[match(colnames(cm), names(.))] 
+```
 add condition metadata to seurat object
 ```{r}
 seurat$condition <- conditions
 ```
 
 # 3. Prepare data for adata object (python)
-save cm and metadata to be read into python
+save cm and metadata to be read into python (for Fig S3B)
 ```{r}
 cm <- con$getJointCountMatrix(raw=F) %>% 
   as.sparse()
@@ -148,6 +152,11 @@ conditions <- gsub("pre_P0_2", "pre_P0", conditions)
 ```
 
 ```{r}
+# order cells in "conditions" as in "cm"
+conditions %<>% .[match(colnames(cm), names(.))] 
+```
+
+```{r}
 #save metadata in a dataframe
 metadata <- data.frame(annotation=as.character(anno_rough), cellnames=names(anno_rough), sample=con$getDatasetPerCell(),condition=conditions)
 head(metadata)
@@ -155,20 +164,19 @@ write.csv(metadata, 'all_metadata.csv')
 ```
 
 
-# Fig 1 E
+# Fig 1E
 ```{r}
-colours <- c("#FFAF32","#3232FF","#32FF32", "#FFFF32","#FF3232","#AF0F0F","#AF0F0F","#AF0F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00") %>% setNames(c("Immature_ependymal_cells",
-"RG","Intermediate_progenitors", "Dividing_cells", "Neuroblasts", "Neurons_1","Neurons_2","Neurons_3","OPC","Microglia","Endothelial/Pericytes/VSMC","Erythrocytes"))
+colours <- c("#FFAF32","#3232FF","#32FF32", "#FFFF32","#FF3232","#AF0F0F","#AF0F0F","#AF0F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00") %>% setNames(c("Immature_ependymal_cells", "RG","Intermediate_progenitors", "Dividing_cells", "Neuroblasts", "Neurons_1","Neurons_2","Neurons_3","OPC","Microglia","Endothelial/Pericytes/VSMC","Erythrocytes"))
 ```
 ```{r}
 con$plotGraph(groups=anno_rough, label="") + scale_colour_manual(values=colours)+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
-# Fig 1 F
+# Fig 1F
 ```{r}
 cowplot::plot_grid(con$plotGraph(gene="Glul", title="Glul", size=0.2) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.border=element_blank()), con$plotGraph(gene="Gls", title="Gls", size=0.2) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),panel.border=element_blank()))
 ```
 
-# Fig 1 G
+# Fig 1G
 ```{r}
 colours <- c("#FF5D71", "#00B0F0", "#A9D18E", "#7030A0") %>% setNames(c("E18_5", "pre_P0", "full_P2", "pre_P3"))
 ```
@@ -187,7 +195,7 @@ VlnPlot(seurat, features="Gls",group.by = "condition", idents = "RG", cols = col
     stat_summary(fun.y = mean, geom='point', size = 3, colour = "yellow", show.legend = F) 
 ```
 
-# Fig S3 A
+# Fig S3A
 ```{r}
 #defining colours of clusters
 colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#FF9b9b","#EB8C32","#C8961E","#FF3232","#AF3232","#B49191","#694646","#820000","#965050","#550505","#C80F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00") %>% setNames(c("Immature ependymal cells-2","Immature ependymal cells-2","RG","Intermediate progenitor cells","Dividing cells-2","Dividing cells-1","Neuroblasts-1", "Dividing cells-4", "Dividing cells-3","Neuroblasts-2","Neurons 1-1","Neurons 1-2","Neurons 2","Neurons 3-3","Neurons 3-4","Neurons 3-1","Neurons 3-2","OPC","Microglia", "Endothelial/Pericytes/VSMC","Erythrocytes"))
@@ -196,8 +204,9 @@ colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#
 con$plotGraph(groups=anno, label="") + scale_colour_manual(values=colours_high)+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-# Fig S3 B
+# Fig S3B
 The following code is run in jupyter notebook (python)
+
 ```{python}
 import scanpy as sc
 import pandas as pd
@@ -221,7 +230,7 @@ cluster_marker = ["Lrrc23", "Foxj1", "Slc1a3", "Fabp7", "Ascl1", "Mki67", "Cenpa
 sc.pl.dotplot(adata, cluster_marker , groupby='annotation', swap_axes=True, categories_order = ['Immature_ependymal_cells', 'RG' , 'Intermediate_progenitors','Dividing_cells', 'Neuroblasts','Neurons_1','Neurons_2','Neurons_3', 'OPC', 'Microglia',  'Endothelial/Pericytes/VSMC', 'Erythrocytes'], save="all.pdf")
 ```
 
-# Fig S3 C
+# Fig S3C
 
 ```{r}
 genes <- c("Foxj1", "Slc1a3","Ascl1", "Mki67", "Dcx", "Rbfox3", "Olig2", "Mpeg1", "Epas1")
@@ -229,7 +238,7 @@ genes %>% lapply(function(p) con$plotGraph(gene=p, title=p, size=0.2) + theme(pa
   cowplot::plot_grid(plotlist=., ncol=5)
 ```
 
-# Fig S3 D
+# Fig S3D
 ```{r, fig.width=5, fig.height=8}
 VlnPlot(seurat, features="Glud1",group.by = "condition", idents = "RG", cols = colours)  +
     stat_summary(fun.y = mean, geom='point', size = 3, colour = "yellow", show.legend = F) 
@@ -256,40 +265,40 @@ Idents(seurat) <- "annotation"
 seurat$annotation <- factor(x = seurat$annotation, levels = level_order)
 ```
 
-## Fig S4 A and B
+## Fig S4A and S4B
 ```{r}
-VlnPlot(seurat, features= "nFeature_RNA", pt.size = 0, log = F,) +  ggtitle(" ") + ylab("genes  per cell") + xlab(" ")+ theme_bw(base_size = 16) + theme( legend.position = "none") +  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ylim(0, 12500)+
+VlnPlot(seurat, features= "nFeature_RNA", pt.size = 0, log = F,) +  ggtitle(" ") + ylab("genes per cell") + xlab(" ")+ theme_bw(base_size = 16) + theme( legend.position = "none") +  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ylim(0, 12500)+
   theme(plot.margin = margin(0.5,0,0,1, "cm"))
 ```
-## Fig S4 C and D
+## Fig S4C and S4D
 ```{r}
-VlnPlot(seurat, features= "nCount_RNA", pt.size = 0)  + ggtitle(" ") +ylab("UMIs per cell") + xlab(" ") + theme_bw(base_size = 16) + theme( legend.position = "none") +  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+VlnPlot(seurat, features= "nCount_RNA", pt.size = 0)  + ggtitle(" ") +ylab("UMIs per cell") + xlab(" ") + theme_bw(base_size = 16) + theme(legend.position = "none") +  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
   theme(plot.margin = margin(0.5,0,0,1, "cm")) + ylim(0, 100000)
 ```
 
 
 
-## Fig S4 E
-reading in low resolution annotation "anno_rough"
+## Fig S4E
+read in low resolution annotation as "anno_rough"
 ```{r, fig.height=4.5}
 plotClusterBarplots(con, groups = anno_rough , show.entropy = F, show.size = F, sample.factor = conditions ) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + scale_fill_discrete(name = "condition") + 
   scale_x_discrete(limits = level_order_rough)+ 
   theme(plot.margin = margin(0.5,0,0,2, "cm"))
 ```
-## Fig S4 F
-read in annotation file high resolution as "anno"
+## Fig S4F
+read in high resolution annotation as "anno"
 ```{r, fig.height= 4.5}
 plotClusterBarplots(con, groups = anno , show.entropy = F, show.size = F, sample.factor = conditions) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + scale_fill_discrete(name = "condition") + 
   scale_x_discrete(limits = level_order)+ 
   theme(plot.margin = margin(0.5,0,0,2, "cm"))
 ```
-## Fig S4 G
+## Fig S4G
 ```{r, fig.height= 4.5}
 plotClusterBarplots(con, groups = anno_rough , show.entropy = F, show.size = F) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) +  scale_x_discrete(limits = level_order_rough) + 
   theme(plot.margin = margin(0.5,0,0,2, "cm"))
 ```
 
-## Fig S4 H
+## Fig S4H
 ```{r,  fig.height=4.5}
 plotClusterBarplots(con, groups = anno, show.entropy = F, show.size = F, ) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
   scale_x_discrete(limits = level_order)+ 
