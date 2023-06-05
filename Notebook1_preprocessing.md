@@ -42,7 +42,7 @@ any(duplicated(unlist(lapply(cms2,colnames))))
 ```
 
 
-## plot summary metrics Fig S2 A and B
+## plot Fig S2A and S2B
 combine both matrices
 ```{r}
 cms <- append(cms1, cms2)
@@ -54,20 +54,21 @@ metadata <- data.frame(sample=names(cms), group= c("fullterm", "fullterm", "pret
 crm <- CRMetrics$new(data.path="/data/Japan_preterm_counts", n.cores = 30, metadata = metadata)
 ```
 
-plot Fig S2 A
+plot Fig S2A
 ```{r, fig.width=5, fig.height=3}
-crm$plotSummaryMetrics(comp.group = "sample", second.comp.group = "group",metrics = "estimated number of cells",plot.geom = "bar") + xlab("") + ylab("# of cells") + theme(legend.position = "right", legend.title = element_blank())
+crm$plotSummaryMetrics(comp.group = "sample", second.comp.group = "group", metrics = "estimated number of cells",plot.geom = "bar") + xlab("") + ylab("number of cells") + theme(legend.position = "right", legend.title = element_blank())
 ggsave("number_of_cells.pdf")
 ```
 ```{r}
+#adding count matrices to crm object
 crm$addDetailedMetrics()
 ```
 
-plot Fig S2 B
+plot Fig S2B
 ```{r, fig.width=6}
 crm$plotDetailedMetrics(comp.group = "group",
                         metrics = "gene_count", 
-                        plot.geom = "violin",hline = F)  + ylab("genes/cell") + theme(legend.position = "right", legend.title = element_blank()) +  stat_summary(fun.y=median,size=10, geom = "text", label= "-")  + theme(axis.text = element_text(size = 12), axis.title =  element_text(size = 12))
+                        plot.geom = "violin",hline = F)  + ylab("genes per cell") + theme(legend.position = "right", legend.title = element_blank()) +  stat_summary(fun.y=median, size=10, geom = "text", label = "-")  + theme(axis.text = element_text(size = 12), axis.title = element_text(size = 12))
 ggsave("VlnPlot_genes_per_cell.pdf")
 ```
 
@@ -106,19 +107,33 @@ con2 <- con2$con
 
 # 3. Filter cells
 ## Run scrublet 
-Create new folders scrublet 1 and 2  
-
+Create new directories scrublet1 and scrublet2  
 Write files for Srublet
 ```{r, eval=FALSE}
-#takes quite a while
 mapply(function(x,y) write.table(as.matrix(x$misc$rawCounts), file = paste0("scrublet1/",y,".csv"), dec = ".", sep=","), x=con1$samples, y=names(con1$samples))
 
 mapply(function(x,y) write.table(as.matrix(x$misc$rawCounts), file = paste0("scrublet2/",y,".csv"), dec = ".", sep=","), x=con2$samples, y=names(con2$samples))
 ```
 
-Run Scrublet on each sample separately using the python script /d0-mendel/home/lwolbeck/preterm-NCU-UCPH/scrub.py:  
-python scrub.py <sample>.csv
+Run Scrublet on each sample .csv file separately using the following python script "scrub.py":
 
+```{python}
+#!/usr/bin/env python
+import sys
+import pandas
+import scrublet
+
+for filename in sys.argv[1:]:
+  print('processing '+filename);
+  print('Reading...')
+  df = pandas.read_csv(filename)
+  scrub = scrublet.Scrublet(df)
+  print('Scoring...')
+  doublet_scores, predicted_doublets = scrub.scrub_doublets()
+  print('Saving...')
+  pandas.DataFrame(doublet_scores).to_csv(filename+".doubletScores")
+print('All done.')
+```
 Import doublet scores 
 ```{r, eval=FALSE}
 doubletvec1 <- do.call("rbind", lapply(dir(path = "scrublet1/", pattern=".doubletScores", full.names = T), read.csv)) %>% .$X0 %>% setNames(con1$samples %>% sapply(function(x) rownames(x$misc$rawCounts)) %>% unlist)
@@ -136,21 +151,21 @@ singlets2 <- doubletvec2[doubletvec2>0.3] #940 cells (2.95%) are removed
 cms2 %<>% lapply(function(s) s[,!colnames(s) %in% names(singlets2)])
 ```
 
-### plot Fig S2 C and D
+### plot Fig S2C and S2D
 ```{r}
-plot <- con1$plotGraph(groups = doubletvec1>0.3, size=0.1, mark.groups=F, show.legend = F, title="Doublets in early timepoints") +scale_colour_manual(values=c("grey", "red"))+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+plot <- con1$plotGraph(groups = doubletvec1>0.3, size=0.1, mark.groups=F, show.legend = F, title="Doublets E18.5 fetus and preterm P0 samples") +scale_colour_manual(values=c("grey", "red"))+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 rasterize(plot, layers='Point', dpi=1000)
 ggsave("Doublets_early.pdf", width=7, height=4.3 )
 ```
 ```{r}
-plot <- con2$plotGraph(groups = doubletvec2>0.3, size=0.1, mark.groups=F, show.legend = F, title="Doublets in late timepoints") +scale_colour_manual(values=c("grey", "red"))+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+plot <- con2$plotGraph(groups = doubletvec2>0.3, size=0.1, mark.groups=F, show.legend = F, title="Doublets in full-term P2 and preterm P3 samples") +scale_colour_manual(values=c("grey", "red"))+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 rasterize(plot, layers='Point', dpi=1000)
 ggsave("Doublets_late.pdf", width=7, height=4.3 )
 ```
 
 
 ## 3.2 Remove cells with mito fraction > 5 % 
-Get mito fraction (percent of mt genes per cell) with helper function
+Get mito fraction (percent of mitochondrial genes per cell) with helper function
 ```{r}
 mito1 <- mitoFraction(con1, "mouse")
 mito2 <- mitoFraction(con2, "mouse")
