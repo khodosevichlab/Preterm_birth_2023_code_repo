@@ -18,19 +18,19 @@ library(CRMetrics)
 ```
 
 
-# 1. Read in data count matrices
+# 1. Read in count matrices
 Make list of count matrices (cms), early (E 18.5 and pre P0) and late (full P2 and pre P3) timepoints will be analysed separately
 ```{r, eval=FALSE}
 #create vector with paths to filtered cms 
-paths1 <- c(E18_5_1= "/data/home/lwolbeck/data/Japan/E18_5_1_counts/outs/filtered_feature_bc_matrix", 
-           E18_5_2="/data/home/lwolbeck/data/Japan/E18_5_2_counts/outs/filtered_feature_bc_matrix",
-          pre_P0_1= "/data/home/lwolbeck/data/Japan/pre_P0_1_counts/outs/filtered_feature_bc_matrix",
-          pre_P0_2= "/data/home/lwolbeck/data/Japan/pre_P0_2_counts/outs/filtered_feature_bc_matrix")
+paths1 <- c(E18_5_1= "/data/home/lwolbeck/data/Japan_preterm_counts/E18_5_1/outs/filtered_feature_bc_matrix", 
+           E18_5_2="/data/home/lwolbeck/data/Japan_preterm_counts/E18_5_2/outs/filtered_feature_bc_matrix",
+          pre_P0_1= "/data/home/lwolbeck/data/Japan_preterm_counts/pre_P0_1/outs/filtered_feature_bc_matrix",
+          pre_P0_2= "/data/home/lwolbeck/data/Japan_preterm_counts/pre_P0_2/outs/filtered_feature_bc_matrix")
 
-paths2 <- c(full_P2_1 = "/data/home/lwolbeck/data/Japan/full_P2_1_counts/outs/filtered_feature_bc_matrix",
-           full_P2_2 ="/data/home/lwolbeck/data/Japan/full_P2_2_counts/outs/filtered_feature_bc_matrix",
-           pre_P3_1 = "/data/home/lwolbeck/data/Japan/pre_P3_1_counts/outs/filtered_feature_bc_matrix",
-          pre_P3_2= "/data/home/lwolbeck/data/Japan/pre_P3_2_counts/outs/filtered_feature_bc_matrix")
+paths2 <- c(full_P2_1 = "/data/home/lwolbeck/data/Japan_preterm_counts/full_P2_1/outs/filtered_feature_bc_matrix",
+           full_P2_2 ="/data/home/lwolbeck/data/Japan_preterm_counts/full_P2_2/outs/filtered_feature_bc_matrix",
+           pre_P3_1 = "/data/home/lwolbeck/data/Japan_preterm_counts/pre_P3_1/outs/filtered_feature_bc_matrix",
+          pre_P3_2= "/data/home/lwolbeck/data/Japan_preterm_counts/pre_P3_2/outs/filtered_feature_bc_matrix")
 
 #read in data in a parallel manner 
 cms1 <- pagoda2::read.10x.matrices(paths1, n.cores=10)
