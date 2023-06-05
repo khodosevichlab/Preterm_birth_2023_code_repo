@@ -74,7 +74,7 @@ ggsave("VlnPlot_genes_per_cell.pdf")
 
 
 # 2. Pagoda and conos processing
-Conos processing with forced alignment (alignment.strength = 0.2) to integrate samples well
+pre-processing of each dataset with pagoda2, followed by using conos to build the joint UMAP graph with forced alignment (alignment.strength = 0.2) to integrate samples well
 ```{r}
 #vector with sample names 
 names1 = c("E18_5_1_",
@@ -188,7 +188,7 @@ cms2 %<>% lapply(function(s) s[,!colnames(s) %in% names(depth2[depth2<1000])])
 ```
 
 # 4. Pagoda and conos 2
-build new conos object with filtered cms
+build new conos object and joint UMAP graph with filtered cms
 ```{r, eval=FALSE}
 con1 <- quickConos(cms1,
                   names1,
@@ -228,7 +228,7 @@ in late timepoints (full P2 and pre P3) cluster 20 was removed since it could no
 cms2 %<>% lapply(function(s) s[,!colnames(s) %in% names(leiden24_2[leiden24_2=="20"])])
 ```
 
-generating new UMAP embedding with cluster 20 removed
+generating new joint UMAP embedding with cluster 20 removed
 ```{r}
 con2 <- quickConos(cms2,
                   names2,
