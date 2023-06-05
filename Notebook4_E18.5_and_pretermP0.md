@@ -24,7 +24,7 @@ library(xlsx)
 
 # 1. DEG analysis
 Read in high resolution annotation file "anno"
-Read in conos object from notebook1 as "con"
+Read in con1 from notebook1 as "con"
 
 Create condition factor for cacoa object
 ```{r,eval=FALSE }
@@ -60,7 +60,7 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_early_RG.xlsx")
 ```
 
 # 3. Figures
-## Fig S5 D
+## Fig S5D
 ```{r}
 #defining colours of clusters
 colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#FF9b9b","#EB8C32","#C8961E","#FF3232","#AF3232","#B49191","#694646","#820000","#965050","#550505","#C80F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00", "#0096FF") %>% setNames(c("Immature ependymal cells-2","Immature ependymal cells-2","RG","Intermediate progenitor cells","Dividing cells-2","Dividing cells-1","Neuroblasts-1", "Dividing cells-4", "Dividing cells-3","Neuroblasts-2","Neurons 1-1","Neurons 1-2","Neurons 2","Neurons 3-3","Neurons 3-4","Neurons 3-1","Neurons 3-2","OPC","Microglia", "Endothelial/Pericytes/VSMC","Erythrocyte", "MKi67+_RG"))
@@ -68,7 +68,7 @@ colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#
 con$plotGraph(groups=anno, label="") + scale_colour_manual(values=colours_high)+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-## Fig. S5 E
+## Fig S5E
 ```{r}
 #define words to exclude from collapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
@@ -89,7 +89,7 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Blues") + guides(fill = color.guide) + labs(title="Top 30 down of RG ", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
 
-## Fig. S5 F
+## Fig S5F
 ```{r, fig.width=7, fig.height=7}
 #define words to exclude from collapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
