@@ -4,7 +4,7 @@ author: "Laura Wolbeck"
 date: "2023-02-23"
 ---
 
-In this notebook we will perform UMAP embedding, DEG and GSEA analysis for fullterm samples E 18.5 and full-term P2. Moreover, this script includes code for all figures of full-term samples. 
+In this notebook UMAP embedding, DEG and GSEA analysis will be performed for full-term samples E18.5 and full-term P2. Moreover, this script includes code for all figures of full-term samples. 
 For DEG and GSEA the package "cacoa" was used: https://github.com/kharchenkolab/cacoa/tree/main
 
 # Setup
@@ -22,12 +22,12 @@ library(xlsx)
 library(enrichplot)
 ```
 
-# 1. Build count matrix (cms)
+# 1. Read in count matrices (cms)
 Build cms from filtered cms from notebook 1
 
 ```{r, eval=F, echo=F}
 #load filtered cms
-#extract fullterm samples into new count matrix
+#extract fullterm samples
 cms <- append(cms1[c(1, 2)], cms2[c(1,2)])
 ```
 
@@ -38,7 +38,8 @@ names = c("E18_5_1_",
            "full_P2_2_")
 ```
 
-# 2. Estimate UMAP embedding (conos)
+# 2. Pagoda and conos
+
 ```{r, eval=FALSE}
 con <- quickConos(cms,
                   names,
