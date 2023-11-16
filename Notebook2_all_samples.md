@@ -82,7 +82,7 @@ cm_norm <- con$getJointCountMatrix(raw=F) %>%
 seurat <- SetAssayData(object= seurat, slot= "data", cm_norm )
 ```
 
-to make sure that cells in annotations are in same order as in cm
+to make sure that cells in annotations are in same order as in cm \
 read in anno and anno_rough
 ```{r}
 # order cells in "anno" as in "cm"
