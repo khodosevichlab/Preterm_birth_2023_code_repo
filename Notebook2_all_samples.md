@@ -204,7 +204,7 @@ colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#
 con$plotGraph(groups=anno, label="") + scale_colour_manual(values=colours_high)+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-# Fig S3B
+# Fig S3B and S3C
 The following code is run in jupyter notebook (python)
 
 ```{python}
@@ -229,19 +229,25 @@ adata.obs = metadata
 cluster_marker = ["Lrrc23", "Foxj1", "Slc1a3", "Fabp7", "Ascl1", "Mki67", "Cenpa", "Dcx","Rbfox3","Neurod6", "Nkx2-1","Ebf1","Drd2","Olig2","Mpeg1","Epas1", "Hbb-bs"]
 sc.pl.dotplot(adata, cluster_marker , groupby='annotation', swap_axes=True, categories_order = ['Immature_ependymal_cells', 'RG' , 'Intermediate_progenitors','Dividing_cells', 'Neuroblasts','Neurons_1','Neurons_2','Neurons_3', 'OPC', 'Microglia',  'Endothelial/Pericytes/VSMC', 'Erythrocytes'], save="all.pdf")
 ```
+```{python}
+sc.pl.dotplot(adata[adata.obs["condition"] == "E18_5"], cluster_marker ,title="E18.5", groupby='annotation', swap_axes=True, categories_order = ['Immature_ependymal_cells', 'RG' , 'Intermediate_progenitors','Dividing_cells', 'Neuroblasts','Neurons_1','Neurons_2','Neurons_3', 'OPC', 'Microglia',  'Endothelial/Pericytes/VSMC', 'Erythrocytes'], save="E18_5.pdf")
+```
+```{python}
+sc.pl.dotplot(adata[adata.obs["condition"] == "full_P2"], cluster_marker ,title="full_P2", groupby='annotation', swap_axes=True, categories_order = ['Immature_ependymal_cells', 'RG' , 'Intermediate_progenitors','Dividing_cells', 'Neuroblasts','Neurons_1','Neurons_2','Neurons_3', 'OPC', 'Microglia',  'Endothelial/Pericytes/VSMC', 'Erythrocytes'], save="full_P2.pdf")
+```
+```{python}
+sc.pl.dotplot(adata[adata.obs["condition"] == "pre_P0"], cluster_marker ,title="pre_P0", groupby='annotation', swap_axes=True, categories_order = ['Immature_ependymal_cells', 'RG' , 'Intermediate_progenitors','Dividing_cells', 'Neuroblasts','Neurons_1','Neurons_2','Neurons_3', 'OPC', 'Microglia',  'Endothelial/Pericytes/VSMC', 'Erythrocytes'], save="pre_P0.pdf")
+```
+```{python}
+sc.pl.dotplot(adata[adata.obs["condition"] == "pre_P3"], cluster_marker ,title="pre_P3", groupby='annotation', swap_axes=True, categories_order = ['Immature_ependymal_cells', 'RG' , 'Intermediate_progenitors','Dividing_cells', 'Neuroblasts','Neurons_1','Neurons_2','Neurons_3', 'OPC', 'Microglia',  'Endothelial/Pericytes/VSMC', 'Erythrocytes'], save="pre_P3.pdf")
+```
 
-# Fig S3C
+# Fig S3D
 
 ```{r}
 genes <- c("Foxj1", "Slc1a3","Ascl1", "Mki67", "Dcx", "Rbfox3", "Olig2", "Mpeg1", "Epas1")
 genes %>% lapply(function(p) con$plotGraph(gene=p, title=p, size=0.2) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.border=element_blank())) %>%
   cowplot::plot_grid(plotlist=., ncol=5)
-```
-
-# Fig S3D
-```{r, fig.width=5, fig.height=8}
-VlnPlot(seurat, features="Glud1",group.by = "condition", idents = "RG", cols = colours)  +
-    stat_summary(fun.y = mean, geom='point', size = 3, colour = "yellow", show.legend = F) 
 ```
 
 # Fig S4
@@ -305,5 +311,59 @@ plotClusterBarplots(con, groups = anno, show.entropy = F, show.size = F, ) + the
   theme(plot.margin = margin(0.5,0,0,2, "cm"))
 ```
 
+## Fig S6
+```{r}
+level_order <- c("E18_5", "pre_P0", "full_P2", "pre_P3")
+Idents(seurat) <- "condition" 
+seurat$condition <- factor(x = seurat$condition, levels = level_order)
+```
+```{r}
+Idents(seurat) <- "annotation"
+```
+```{r}
+function_vlnplot <- function(feature) {
+  VlnPlot(seurat, features = feature, group.by = "condition", idents = "RG", cols = colours) +
+    stat_summary(fun = mean, geom = "point", size = 3, colour = "yellow", show.legend = FALSE) +
+    theme(axis.title.x = element_blank(),
+          axis.title.y = element_blank(),
+          legend.position = "none") +
+    ggtitle(feature)
+}
+```
+# Fig S6A
+```{r}
+features <- c( "Gapdh", "Ldha", "Eno1")
+```
+```{r}
+plots <- list()
+for (x in features) {
+  p <- function_vlnplot(x)
+  plots[[x]] <- p
+}
+```
+```{r, fig.height=16, fig.width=10}
+cowplot::plot_grid(plotlist = plots, ncol = 2)
+ggsave("Vlnplots2_mean.pdf", width = 7, height = 8)
+```
 
+# Fig S6B
+```{r, fig.width=5, fig.height=8}
+VlnPlot(seurat, features="Glud1",group.by = "condition", idents = "RG", cols = colours)  +
+    stat_summary(fun.y = mean, geom='point', size = 3, colour = "yellow", show.legend = F) 
+```
 
+# Fig S6C
+```{r}
+features <- c("Mki67", "Sox2", "Gfap", "Nes", "Ascl1", "Dcx")
+```
+```{r}
+plots <- list()
+for (x in features) {
+  p <- function_vlnplot(x)
+  plots[[x]] <- p
+}
+```
+```{r, fig.height=16, fig.width=10}
+cowplot::plot_grid(plotlist = plots, ncol = 3)
+ggsave("Vlnplots_mean.pdf")
+```
