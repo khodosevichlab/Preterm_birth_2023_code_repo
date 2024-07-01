@@ -4,7 +4,7 @@ author: "Laura Wolbeck"
 date: "2024-07-01"
 output: html_document
 ---
-#setup
+# setup
 ```{r}
 #Load helper functions
 source("scRNA_helper_functions_preterm.R")
