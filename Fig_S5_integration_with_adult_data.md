@@ -19,60 +19,6 @@ library(cowplot)
 library(clusterProfiler)
 ```
 
-# Fig S5A
-## E18.5 vs full P2
-```{r}
-cao <- readRDS("cao_fullterm_DEG2.rds")
-```
-
-```{r}
-cao$estimateCellLoadings()
-```
-```{r}
-saveRDS(cao, "cao_fullterm_DEG2.rds" )
-```
-
-```{r, fig.height=6}
-cao$plotCellLoadings(signif.threshold=0.05, show.pvals = F) + xlab("separation coefficient") 
-ggsave("Compositionshifts_fullterm.pdf",width=6, height=4.5)
-```
-
-# Fig S5B
-##  E18.5 vs Pre P0 (early timepoint)
-```{r}
-cao <- readRDS("cao_early_DEG2.rds")
-```
-
-```{r}
-cao$estimateCellLoadings()
-```
-
-```{r, fig.height=6}
-cao$plotCellLoadings(signif.threshold=0.05, show.pvals = F) + xlab("separation coefficient") 
-ggsave("Compositionshifts_early.pdf",width=6, height=4.5)
-```
-```{r}
-saveRDS(cao, "cao_early_DEG2.rds")
-```
-
-# Fig S5C
-##  Full P2 vs Pre P3 (late timepoint)
-```{r}
-cao <- readRDS("cao_late_DEG2.rds")
-```
-
-```{r, fig.height=6}
-cao$estimateCellLoadings()
-```
-```{r}
-saveRDS(cao, "cao_late_DEG2.rds")
-```
-
-```{r, fig.height=6}
-cao$plotCellLoadings(signif.threshold=0.05, show.pvals = F)  + xlab("separation coefficient") 
-ggsave("Compositionshifts_late.pdf",width=6, height=4.5)
-```
-
 # combine our data (full-term P2) with P29/35 from Cebrian-Silla et al.
 https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE165554
 tar file of their seurat object: GSE165554_RAW.tar
