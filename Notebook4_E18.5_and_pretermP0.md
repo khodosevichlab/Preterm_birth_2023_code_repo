@@ -60,7 +60,17 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_early_RG.xlsx")
 ```
 
 # 3. Figures
-## Fig S5D
+
+# Fig S5B: compositional data analysis
+```{r}
+cao$estimateCellLoadings()
+```
+
+```{r, fig.height=6}
+cao$plotCellLoadings(signif.threshold=0.05, show.pvals = F) + xlab("separation coefficient") 
+ggsave("Compositionshifts_early.pdf",width=6, height=4.5)
+```
+## Fig S7D
 ```{r}
 #defining colours of clusters
 colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#FF9b9b","#EB8C32","#C8961E","#FF3232","#AF3232","#B49191","#694646","#820000","#965050","#550505","#C80F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00", "#0096FF") %>% setNames(c("Immature ependymal cells-2","Immature ependymal cells-2","RG","Intermediate progenitor cells","Dividing cells-2","Dividing cells-1","Neuroblasts-1", "Dividing cells-4", "Dividing cells-3","Neuroblasts-2","Neurons 1-1","Neurons 1-2","Neurons 2","Neurons 3-3","Neurons 3-4","Neurons 3-1","Neurons 3-2","OPC","Microglia", "Endothelial/Pericytes/VSMC","Erythrocyte", "MKi67+_RG"))
@@ -68,7 +78,7 @@ colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#
 con$plotGraph(groups=anno, label="") + scale_colour_manual(values=colours_high)+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-## Fig S5E
+## Fig S7E
 ```{r}
 #define words to exclude from collapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
@@ -89,7 +99,7 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Blues") + guides(fill = color.guide) + labs(title="Top 30 down of RG ", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
 
-## Fig S5F
+## Fig S7F
 ```{r, fig.width=7, fig.height=7}
 #define words to exclude from collapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
@@ -108,3 +118,4 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Reds") + guides(fill = color.guide) + labs(title="Top 30 up of RG", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
+
