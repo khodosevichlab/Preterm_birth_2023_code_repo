@@ -97,8 +97,20 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_fullterm_RG.xlsx")
 ```{r}
 enrichplot::dotplot(cao$test.results$GSEA$res$RG$BP,showCategory=c("ribosome biogenesis" , "ribonucleoprotein complex biogenesis", "ribonucleoprotein complex subunit organization", "ribonucleoprotein complex assembly"))
 ```
-
 ## Fig S5A
+```{r}
+cao$plotEmbedding(color.by='cell.groups', alpha=0.1, size=0.2, title='', 
+                    plot.na=FALSE, show.legend=F, font.size=c(2,3))
+```
+```{r}
+cao$estimateCellLoadings()
+```
+```{r, fig.height=6}
+cao$plotCellLoadings(signif.threshold=0.05, show.pvals = F) + xlab("separation coefficient") 
+ggsave("Compositionshifts_fullterm.pdf",width=6, height=4.5)
+```
+
+## Fig S7A
 ```{r}
 #defining colours of high resolution clusters
 colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#FF9b9b","#EB8C32","#C8961E","#FF3232","#AF3232","#B49191","#694646","#820000","#965050","#550505","#C80F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00") %>% setNames(c("Immature ependymal cells-2","Immature ependymal cells-2","RG","Intermediate progenitor cells","Dividing cells-2","Dividing cells-1","Neuroblasts-1", "Dividing cells-4", "Dividing cells-3","Neuroblasts-2","Neurons 1-1","Neurons 1-2","Neurons 2","Neurons 3-3","Neurons 3-4","Neurons 3-1","Neurons 3-2","OPC","Microglia", "Endothelial/Pericytes/VSMC","Erythrocytes"))
@@ -108,7 +120,7 @@ colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#
 con$plotGraph(groups=anno, embedding="90", label="") + scale_colour_manual(values=colours_high) +  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-## Fig. S5B
+## Fig. S7B
 ```{r}
 #define words to exclude from colapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
@@ -129,7 +141,7 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Blues") + guides(fill = color.guide) + labs(title="Top 30 down of RG fullterm", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
 
-## Fig. S5C
+## Fig. S7C
 ```{r, fig.width=7, fig.height=7}
 #define words to exclude from colapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
