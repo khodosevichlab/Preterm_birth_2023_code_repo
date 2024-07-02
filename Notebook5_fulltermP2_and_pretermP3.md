@@ -61,12 +61,14 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_late_RG.xlsx")
 
 # 3. Figures
 
-## Fig H lower plot
+## Fig 1H lower plot
 ```{r}
 enrichplot::dotplot(cao$test.results$GSEA$res$RG$BP,showCategory=c("ribonucleoprotein complex biogenesis","ribonucleoprotein complex assembly","ribonucleoprotein complex subunit organization"))
 ```
+## Fig S5
 
-## Fig S5G
+
+## Fig S7G
 ```{r}
 #defining colours of clusters
 colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#FF9b9b","#EB8C32","#C8961E","#FF3232","#AF3232","#B49191","#694646","#820000","#965050","#550505","#C80F0F","#AF32FF","#E632E6","#FFC8FF","#DBFF00") %>% setNames(c("Immature ependymal cells-2","Immature ependymal cells-2","RG","Intermediate progenitor cells","Dividing cells-2","Dividing cells-1","Neuroblasts-1", "Dividing cells-4", "Dividing cells-3","Neuroblasts-2","Neurons 1-1","Neurons 1-2","Neurons 2","Neurons 3-3","Neurons 3-4","Neurons 3-1","Neurons 3-2","OPC","Microglia", "Endothelial/Pericytes/VSMC","Erythrocyte"))
@@ -74,7 +76,7 @@ colours_high <- c("#e1af32","#FFAF32","#3232FF","#32FF32","#FFFF00","#CDCD32","#
 con$plotGraph(groups=anno, label="") + scale_colour_manual(values=colours_high)+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 ```
 
-## Fig S5H
+## Fig S7H
 
 ```{r}
 #define words to exclude from collapsed GO terms
@@ -95,7 +97,7 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Blues") + guides(fill = color.guide) + labs(title="Top 20 down of RG ", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
 
-## Fig S5I
+## Fig S7I
 ```{r, fig.width=7, fig.height=7}
 #define words to exclude from collapsed GO terms
 ex_words <- c('regulation', 'process', 'cell')
