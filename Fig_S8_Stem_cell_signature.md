@@ -25,7 +25,7 @@ term2gene <- rbind(term2gene, data.frame(Term = replicate(22, "Active stem cell 
 saveRDS(term2gene, "term2gene.rds")
 ```
 
-# Fig S8B: fullterm: E18.5 vs fullterm P2
+# Fig S8B: fullterm samples
 ```{r}
 cao <- readRDS("cao_fullterm_DEG2.rds")
 ```
@@ -55,7 +55,7 @@ clusterProfiler::dotplot(res)+ facet_grid(.~.sign) + ggtitle("Fullterm")
 ggsave("Signature_fullterm.pdf", height=4)
 ```
 
-# late timepoints: 
+# late timepoints
 ```{r}
 cao <- readRDS("cao_late_DEG2.rds")
 ```
@@ -83,7 +83,7 @@ clusterProfiler::dotplot(res)+ facet_grid(.~.sign) + ggtitle("Late timepoints")
 ggsave("Signature_late.pdf", height=4)
 ```
 
-# early timepoint
+# early timepoints
 ```{r}
 cao <- readRDS("cao_early_DEG2.rds")
 ```
