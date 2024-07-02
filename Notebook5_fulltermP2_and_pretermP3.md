@@ -65,8 +65,18 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_late_RG.xlsx")
 ```{r}
 enrichplot::dotplot(cao$test.results$GSEA$res$RG$BP,showCategory=c("ribonucleoprotein complex biogenesis","ribonucleoprotein complex assembly","ribonucleoprotein complex subunit organization"))
 ```
-## Fig S5
-
+## Fig S5C
+```{r}
+cao$plotEmbedding(color.by='cell.groups', alpha=0.1, size=0.2, title='', 
+                    plot.na=FALSE, show.legend=F, font.size=c(2,3))
+```
+```{r}
+cao$estimateCellLoadings()
+```
+```{r, fig.height=6}
+cao$plotCellLoadings(signif.threshold=0.05, show.pvals = F) + xlab("separation coefficient") 
+ggsave("Compositionshifts_fullterm.pdf",width=6, height=4.5)
+```
 
 ## Fig S7G
 ```{r}
@@ -116,3 +126,4 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Reds") + guides(fill = color.guide) + labs(title="Top 30 up of RG", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
+# Fig S8A
