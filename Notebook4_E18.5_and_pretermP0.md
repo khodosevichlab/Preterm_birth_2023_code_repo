@@ -61,7 +61,7 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_early_RG.xlsx")
 
 # 3. Figures
 
-# Fig S5B: compositional data analysis
+## Fig S5B: compositional data analysis
 ```{r}
 cao$estimateCellLoadings()
 ```
