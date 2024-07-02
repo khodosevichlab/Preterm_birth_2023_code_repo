@@ -127,3 +127,10 @@ color.guide <- guide_colorbar(title = "-log10(p-value)", title.position = "left"
 ggplot(df, aes(x=G2, y = G1, fill = value)) + geom_tile( colour="white", size=0.2) +  scale_fill_distiller(direction = 1 , palette = "Reds") + guides(fill = color.guide) + labs(title="Top 30 up of RG", y = " ", x= " ") + theme_grey(base_size = 11) + theme(axis.ticks.x = element_blank(),  axis.text.x = element_blank())
 ```
 # Fig S8A
+```{r}
+cao <- readRDS("cao_late_DEG2.rds")
+```
+```{r}
+dotplot(cao$test.results$GSEA$res$RG$BP,showCategory=c("mitochondrial respiratory chain complex assembly","mitochondrial respiratory chain complex I assembly"))
+ggsave(plot=last_plot(),filename="RG_specific_GOs_late2.pdf")
+```
