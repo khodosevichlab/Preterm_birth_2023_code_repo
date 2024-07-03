@@ -9,14 +9,11 @@ output: html_document
 #Load helper functions
 source("scRNA_helper_functions_preterm.R")
 library(Seurat)
-library(qs)
-library(pagoda2)
 library(conos)
 library(ggplot2)
 library(magrittr)
 library(ggrastr)
 library(cowplot)
-library(clusterProfiler)
 ```
 
 # combine our data (full-term P2) with P29/35 from Cebrian-Silla et al.
