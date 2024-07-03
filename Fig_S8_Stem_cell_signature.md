@@ -6,12 +6,11 @@ output: html_document
 ---
 # setup
 ```{r}
-library(magritrr)
-library()
-
+library(magrittr)
+library(clusterProfiler)
+library(ggplot2)
 ```
 # prepare TERM2GENE data.frame
-
 using genes from Cheung and Rando 
 ```{r}
 quiescent_genes <- c("Ccnd3", "Pdk1","Smarca2", "Foxo3", "Ezh1", "Prdm5","Ptov1", "Zfp30", "Zbtb20","Phf1", "Ctdsp1", "Thra", "Tef", "Dicer1", "Crebrf", "Bcas3", "Ddx3y", "Gabarapl1", "Nop53", "Itm2a", "Il18", "Zyx", "Ephx1", "Clstn1", "Gstk1", "Cdip1", "Ddt", "Ivd", "Fhl1", "Ndrg2", "Grina","Pik3r1", "Fyn", "Chkb", "Pink1", "Ulk2", "Dnajb9", "Pfdn5", "Ctsf", "Crim1", "Selenop", "Gabbr1", "Grb10", "Bbs2", "Rps14", "Igf2r", "Selenbp1", "Rnf167", "Map1lc3a")
@@ -34,7 +33,7 @@ saveRDS(term2gene, "term2gene.rds")
 cao <- readRDS("cao_fullterm_DEG2.rds")
 ```
 
-taking all DEG of RG
+taking all DEG (also non-significant) of RG
 ```{r}
 RG_DEG <-  cao$test.results$de$RG$res
 ```
@@ -94,19 +93,12 @@ taking only DEG of RG
 ```{r}
 RG_DEG <-  cao$test.results$de$RG$res
 ```
-```{r}
-head(RG_DEG)
-```
 
 ```{r}
 RG_DEG <- RG_DEG$log2FoldChange
 names(RG_DEG) <- cao$test.results$de$RG$res$Gene
 ```
-```{r}
-x <- active_genes %in% names(RG_DEG) 
-names(x)<- active_genes
-x
-```
+
 ```{r}
 RG_DEG %<>% sort(decreasing = TRUE)
 ```
