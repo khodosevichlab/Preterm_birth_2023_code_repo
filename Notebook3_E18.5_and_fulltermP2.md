@@ -98,10 +98,7 @@ write.xlsx(x = GSEA[GSEA$V1=="RG",], file= "GSEA_fullterm_RG.xlsx")
 enrichplot::dotplot(cao$test.results$GSEA$res$RG$BP,showCategory=c("ribosome biogenesis" , "ribonucleoprotein complex biogenesis", "ribonucleoprotein complex subunit organization", "ribonucleoprotein complex assembly"))
 ```
 ## Fig S5A
-```{r}
-cao$plotEmbedding(color.by='cell.groups', alpha=0.1, size=0.2, title='', 
-                    plot.na=FALSE, show.legend=F, font.size=c(2,3))
-```
+
 ```{r}
 cao$estimateCellLoadings()
 ```
