@@ -4,8 +4,12 @@ author: "Laura Wolbeck"
 date: "2024-07-02"
 output: html_document
 ---
+# setup
+```{r}
+library(magritrr)
+library()
 
-
+```
 # prepare TERM2GENE data.frame
 
 using genes from Cheung and Rando 
@@ -38,7 +42,6 @@ RG_DEG <-  cao$test.results$de$RG$res
 ```{r}
 RG_DEG <- RG_DEG$log2FoldChange
 names(RG_DEG) <- cao$test.results$de$RG$res$Gene
-#11144 genes
 ```
 
 sort genes by log2fold change
